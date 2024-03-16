@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const Game = sequelize.define('Game', {
     winner: {
       type: DataTypes.STRING(1),
-      allowNull: true
+      allowNull: true,
+      defaultValue: null
     },
     position: {
       type: DataTypes.JSONB,

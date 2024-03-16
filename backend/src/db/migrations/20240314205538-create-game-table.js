@@ -12,7 +12,8 @@ module.exports = {
       },
       winner: {
         type: Sequelize.STRING(1),
-        allowNull: true
+        allowNull: true,
+        defaultValue: null
       },
       position: {
         type: Sequelize.JSONB,
@@ -29,12 +30,8 @@ module.exports = {
         defaultValue: 'X'
       },
       createdAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
         allowNull: false,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
       }
     });

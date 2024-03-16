@@ -11,8 +11,7 @@ module.exports = {
         "20": null, "21": null, "22": null
       }),
       turn: 'X',
-      createdAt: new Date(),
-      updatedAt: new Date()
+      createdAt: new Date()
     }]);
   },
 

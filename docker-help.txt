@@ -54,3 +54,8 @@ docker system prune
 
 # Remove all unused volumes
 docker volume prune
+
+LOGGING INTO CONTAINERS:
+
+docker exec -it tic-tac-toe-backend-1 bash
+docker logs -f tic-tac-toe-backend-1
