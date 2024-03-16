@@ -1,14 +1,17 @@
 import React from 'react';
 import TicTacToe from './components/TicTacToe';
-import Counter from './components/Counter';
-import Test from './components/Test'
+import Header from './components/Header';
 
-function App() {
+
+const App = () => {
   return (
-    <div className="App">
-      <TicTacToe />
+    <div className="flex flex-col h-screen">
+      <Header />
+      <div className="flex flex-col items-center justify-start p-4 flex-grow overflow-y-auto">
+        <TicTacToe />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
