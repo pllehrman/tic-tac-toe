@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -8,6 +9,7 @@ const TicTacToe = () => {
   const [isXNext, setIsXNext] =  useState(true); //using state to define who's turn it is: X or O
   const [moves, setMoves] = useState(0);
   const [gameId, setGameId] = useState(null); //keeps track of the game id in the db
+  const navigate = useNavigate();
 
   useEffect(() => {
     resetGame();
@@ -80,32 +82,43 @@ const TicTacToe = () => {
   };
 
 
-function calculateWinner(board) {
-  const winningPossibilities = [
-    [0, 1, 2], //These represent the three possibilities of winning horizontally
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 4, 8], //These represent the two possibilities of winning diagonally
-    [2, 4, 6], 
-    [0, 3, 6], //These represent the three possibilities of winning vertically
-    [1, 4, 7],
-    [2, 5, 8]
-  ]
+  function calculateWinner(board) {
+    const winningPossibilities = [
+      [0, 1, 2], //These represent the three possibilities of winning horizontally
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 4, 8], //These represent the two possibilities of winning diagonally
+      [2, 4, 6], 
+      [0, 3, 6], //These represent the three possibilities of winning vertically
+      [1, 4, 7],
+      [2, 5, 8]
+    ]
 
-  for (let i = 0; i < winningPossibilities.length; i++){
-    const [a, b, c] = winningPossibilities[i];
-    
-    if (board[a] && board[a] === board[b] && board[b] === board[c]){ //Do all three values along one of the winning possibilities align?
-      return board[a];
-    }
+    for (let i = 0; i < winningPossibilities.length; i++){
+      const [a, b, c] = winningPossibilities[i];
+      
+      if (board[a] && board[a] === board[b] && board[b] === board[c]){ //Do all three values along one of the winning possibilities align?
+        return board[a];
+      }
+    };
+    return null; //if none of these possibilites are found then there is no winner
   };
-  return null; //if none of these possibilites are found then there is no winner
-};
+
+  const backHome = () => {
+    navigate('/home');
+  }
+
 
 // This is where the main board gets rendered.
   // Using the map function, we turn every cell into its own react component using the render cell functionality
   return (
     <div className="flex flex-col items-center justify-start p-4 flex-grow overflow-y-auto">
+      <button
+            onClick={backHome}
+            className="absolute top-30 right-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+            Back Home
+        </button>
       <div className='flex flex-col items-center justify-center h-screen border border-grey-200'>
         <div className='text-2xl font-semibold mb-4'> {status}</div> {/* Adjust the margin-bottom */}
           {winner && <button onClick={resetGame}> Start New Game </button>}

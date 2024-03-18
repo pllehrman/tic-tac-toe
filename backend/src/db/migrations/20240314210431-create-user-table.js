@@ -12,7 +12,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      firstname: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        unique: false
+      },
+      lastname: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        unique: false,
+      },
+      email: {
         type: Sequelize.STRING(255),
         allowNull: false,
         unique: true
@@ -20,12 +30,12 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.now
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.now
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

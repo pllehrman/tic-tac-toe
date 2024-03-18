@@ -11,7 +11,7 @@ const getAllGames = asyncWrapper( async (req, res) => {
         throw createCustomError('Could not retrieve games.', 404);
     }
 
-    res.status(200).json({data: games})
+    res.status(200).json(games)
 });
 
 //POST
