@@ -43,11 +43,11 @@ const Home = () => {
     }, [isActive]);
 
     const startNewGame = () => {
-        navigate('/game');
+        navigate('/tictactoe');
     };
 
     const viewGame = (gameId) => {
-        navigate(`/game/${gameId}`);
+        navigate(`/tictactoe/${gameId}`);
     };
 
     const deleteGames = async () => {

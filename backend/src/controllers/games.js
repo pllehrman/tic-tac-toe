@@ -43,7 +43,7 @@ const getGame = asyncWrapper( async (req, res) => {
         throw createCustomError('Game could not be found', 404);
     }
 
-    res.status(200).json({data: game});
+    res.status(200).json(game);
 });
 
 //DELETE

@@ -13,7 +13,8 @@ const App = () => {
         <Routes>
           <Route path="/home" element={<Home />}/>
           <Route path="/signup" element={<Signup />} />
-          <Route path="/game" element={<TicTacToe />} />
+          <Route path="/tictactoe" element={<TicTacToe />}></Route>
+          <Route path="/tictactoe/:gameId" element={<TicTacToe />} />
         </Routes>
       </div>
     </Router>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import GameBoard from './GameBoard';
 const apiUrl = process.env.REACT_APP_API_URL;
 
 
@@ -8,14 +9,33 @@ const TicTacToe = () => {
   const [board, setBoard] = useState(Array(9).fill(null)) // using state to define the board which will need to be "remembered"
   const [isXNext, setIsXNext] =  useState(true); //using state to define who's turn it is: X or O
   const [moves, setMoves] = useState(0);
-  const [gameId, setGameId] = useState(null); //keeps track of the game id in the db
+  const [gameIdDB, setGameIdDB] = useState(false); //keeps track of the game id in the db
+  const [isViewMode, setIsViewMode] = useState(false);
+  const gameIdParam = useParams().gameId; //this is the variable when the method is called in view mode 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    resetGame();
-  }, [])
+  useEffect(() => { 
+    const fetchData = async () => {
+      if (gameIdParam) { // a id has been passed in via the url. This is view mode
+        setIsViewMode(true);
+        try {
+          const response = await axios.get(`${apiUrl}/games/${gameIdParam}`);
+          setBoard(response.data.position);
+          setIsXNext(response.data.turn === 'X'); //technically don't need this line since we just need board positioning for view
+        } catch (error) {
+          console.log(`Error fetching game with ID ${gameIdParam}`);
+        }
+      } else {
+        resetGame();
+      } }
+    fetchData();
+  }, [gameIdParam]);
 
   const handleClick = async (index) => {
+    if (isViewMode) {
+      return; //we're not playing the game in view mode
+    }
+
     const newBoard = [...board] //this effectively copies the board to this variable
     if (newBoard[index] || winner) return; //If the space has already been filled or the winner is decided return early
     newBoard[index] = isXNext ? 'X' : 'O';  // deciding who's move it is based on the isXNext variable and filling in the board accoringly
@@ -25,7 +45,7 @@ const TicTacToe = () => {
     setIsXNext(!isXNext);
     setMoves(prevMoves => prevMoves + 1); //this is functionally the better way to update the previous value.
 
-    if(typeof gameId !== 'undefined' || gameId !== null) {
+    if(typeof gameIdParam === 'undefined' || gameIdParam === null) { //we're in play mode if this is
       updateBoard(newBoard);
     }
    };
@@ -33,7 +53,7 @@ const TicTacToe = () => {
   // This updates the board in the DB.
   const updateBoard = async (newBoard) => {
     try {
-      await axios.put(`${apiUrl}/games/${gameId}`, {
+      await axios.put(`${apiUrl}/games/${gameIdDB}`, {
         position: newBoard,
         turn: isXNext ? 'O' : 'X',
         winner: calculateWinner(newBoard)
@@ -42,26 +62,6 @@ const TicTacToe = () => {
       console.log(error);
     }
   };
-  
-
-  //This particular cell is responsible for rendering the individual cell
-  const renderCell = (index) => {
-    // Below we are dynamically changing the cells borders based on its position
-    // We don't add a top border for the 0, 1, 2 cells or a left border for the 0, 3, 6 cells
-    return (
-      <button
-        key={index} 
-        className={
-        `w-24 h-24 bg-white font-bold text-xl text-gray-800 hover:bg-gray-100 
-        ${index !== 0 && index !== 1 && index !== 2 ? 'border-t-2': ''} 
-        ${index !== 0 && index !== 3 && index !== 6 ? 'border-l-2': ''}
-        border-gray-400`} onClick={() => handleClick(index)
-        }>
-        
-        {board[index]}
-      </button>
-    )
-  }
 
   const winner = calculateWinner(board); //given the board layout, we can calculate the winner
   const status = winner
@@ -75,7 +75,7 @@ const TicTacToe = () => {
           setBoard(Array(9).fill(null));
           setIsXNext(true);
           setMoves(0);
-          setGameId(prevGameId => response.data.game.id);
+          setGameIdDB(prevGameIdDB => response.data.game.id);
         } catch (error) {
           console.log("Error creating a new game:", error);
         }
@@ -114,23 +114,21 @@ const TicTacToe = () => {
   return (
     <div className="flex flex-col items-center justify-start p-4 flex-grow overflow-y-auto">
       <button
-            onClick={backHome}
-            className="absolute top-30 right-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-            Back Home
-        </button>
-      <div className='flex flex-col items-center justify-center h-screen border border-grey-200'>
-        <div className='text-2xl font-semibold mb-4'> {status}</div> {/* Adjust the margin-bottom */}
-          {winner && <button onClick={resetGame}> Start New Game </button>}
-          {moves >= 9 && !winner && <button onClick={resetGame}> Start New Game </button>}
-        <div className='grid grid-cols-3 gap-0 rounded-lg overflow-hidden border-2 border-gray-400'> {/* Add a negative margin-top */}
-          {board.map((_, index) => renderCell(index))} 
-        </div>
+        onClick={backHome}
+        className="absolute top-30 right-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Back Home
+      </button>
+      <div className="flex flex-col items-center justify-center h-screen border border-grey-200">
+        <div className="text-2xl font-semibold mb-4">{status}</div>
+        {!winner && moves >= 9 && (
+          <button onClick={resetGame}>Start New Game</button>
+        )}
+        <GameBoard board={board} handleClick={handleClick} isViewMode={isViewMode} />
       </div>
     </div>
-
-
   );
 };
+
 
 export default TicTacToe;
