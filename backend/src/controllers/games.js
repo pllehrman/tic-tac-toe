@@ -17,12 +17,20 @@ const getAllGames = asyncWrapper( async (req, res) => {
 //POST
 const newGame = asyncWrapper( async (req, res) => {
     const game = await Game.create(); //no need to pass in anything here as of now
-    
+    console.log('Created new game!');
     if (!game) {
         throw createCustomError('Game unable to be created', 500);
     }
 
-    res.status(201).json({data: game});
+    res.status(201).json({game});
+});
+
+//DELETE
+const deleteAllGames = asyncWrapper( async (req, res) => {
+    await Game.destroy({
+        where: {}
+    });
+    res.status(200).json({ message: "All games deleted successfully."});
 });
 
 //ROUTES -> '/games/:id'
@@ -50,10 +58,17 @@ const deleteGame = asyncWrapper( async (req, res) => {
     res.status(200).json({ message: `Game with ${gameId} ID successfully deleted`});
 })
 
+
 //PUT
 const updateGame = asyncWrapper( async (req, res) => {
+    console.log('You clicked a square!');
     const gameId = req.params.id;
     const {winner, position, turn } = req.body; //destructure the updated fields
+
+    console.log("winner:", winner);
+    console.log("position:", position);
+    console.log("turn:", turn);
+
 
     const game = await Game.findByPk(gameId); //find the game
 
@@ -68,6 +83,7 @@ const updateGame = asyncWrapper( async (req, res) => {
 module.exports = {
     getAllGames,
     newGame,
+    deleteAllGames,
     getGame,
     deleteGame,
     updateGame

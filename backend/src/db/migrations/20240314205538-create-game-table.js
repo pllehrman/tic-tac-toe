@@ -16,13 +16,13 @@ module.exports = {
         defaultValue: null
       },
       position: {
-        type: Sequelize.JSONB,
+        type: Sequelize.ARRAY(Sequelize.TEXT), // Use ARRAY data type for PostgreSQL
         allowNull: false,
-        defaultValue: {
-          "00": null, "01": null, "02": null,
-          "10": null, "11": null, "12": null,
-          "20": null, "21": null, "22": null
-        }
+        defaultValue: [
+          null, null, null, 
+          null, null, null, 
+          null, null, null
+        ]
       },
       turn: {
         type: Sequelize.STRING(1),
@@ -33,6 +33,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.now
       }
     });
   },
