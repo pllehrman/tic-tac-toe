@@ -11,7 +11,7 @@ const App = () => {
       <div className="flex flex-col h-screen">
         <Header />
         <Routes>
-          <Route path="/home" element={<Home />}/>
+          <Route path="/" element={<Home />}/>
           <Route path="/signup" element={<Signup />} />
           <Route path="/tictactoe" element={<TicTacToe />}></Route>
           <Route path="/tictactoe/:gameId" element={<TicTacToe />} />

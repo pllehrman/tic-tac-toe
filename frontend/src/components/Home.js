@@ -57,7 +57,12 @@ const Home = () => {
         } catch (error){
           console.log('Error in deleting the games.', error)
         }
-      }
+    };
+
+    const signUp = async () => {
+        navigate('/signup')
+    }
+    
 
     return (
         <div className="overflow-auto">
@@ -66,6 +71,12 @@ const Home = () => {
                 className="absolute top-28 right-10 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
             >
                 Delete Game History
+            </button>
+            <button
+                onClick={signUp}
+                className="absolute top-28 left-10 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            >
+                Sign Up
             </button>
             <div className="home flex flex-col items-center justify-center min-h-screen bg-gray-100 overflow-y-auto">
             <button

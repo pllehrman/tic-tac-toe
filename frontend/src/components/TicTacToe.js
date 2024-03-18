@@ -105,7 +105,7 @@ const TicTacToe = () => {
   };
 
   const backHome = () => {
-    navigate('/home');
+    navigate('/');
   }
 
 
@@ -119,7 +119,7 @@ const TicTacToe = () => {
       >
         Back Home
       </button>
-      <div className="flex flex-col items-center justify-center h-screen border border-grey-200">
+      <div className="flex flex-col items-center justify-center h-screen">
         <div className="text-2xl font-semibold mb-4">{status}</div>
         {!winner && moves >= 9 && (
           <button onClick={resetGame}>Start New Game</button>
